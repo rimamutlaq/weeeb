@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IT312 Quiz</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+
+.tf-card:hover,.ch.tf:hover{border-color:#fbbf24}
+.ch.tf .name{color:#fbbf24}
+.lbl.tf{background:#2a1f00;color:#fbbf24}
+.fill.tf{background:linear-gradient(90deg,#d97706,#fbbf24)}
+
+body{font-family:system-ui,sans-serif;background:#0f0f13;color:#e8e8f0;min-height:100vh}
+#home{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:1.5rem}
+h1{font-size:1.4rem;font-weight:700;background:linear-gradient(135deg,#7c6af7,#f97316);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-align:center;margin-bottom:.3rem}
+.sub{color:#8888a8;font-size:.82rem;text-align:center;margin-bottom:1.8rem}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;width:100%;max-width:460px}
+.ch{background:#1e1e28;border:1.5px solid #2a2a38;border-radius:16px;padding:1.1rem .8rem;text-align:center;cursor:pointer;transition:border-color .2s,transform .15s;user-select:none;-webkit-user-select:none}
+.ch:active{transform:scale(.96)}
+.ch .icon{font-size:1.9rem;margin-bottom:.4rem}
+.ch .name{font-size:.9rem;font-weight:600;margin-bottom:.15rem}
+.ch .cnt{font-size:.7rem;color:#8888a8}
+.js .name{color:#a78bfa}.js:hover{border-color:#a78bfa}
+.dom .name{color:#fb923c}.dom:hover{border-color:#fb923c}
+.rx .name{color:#4ade80}.rx:hover{border-color:#4ade80}
+.ls .name{color:#38bdf8}.ls:hover{border-color:#38bdf8}
+.cs .name{color:#c084fc}.cs:hover{border-color:#c084fc}
+.rw .name{color:#f97316}.rw:hover{border-color:#f97316}
+#quiz{display:none;padding:.9rem}
+.qhdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:.9rem;flex-direction:row-reverse}
+.back{background:#1e1e28;border:1px solid #2a2a38;color:#8888a8;border-radius:99px;padding:5px 14px;font-size:.78rem;cursor:pointer;font-family:inherit}
+.lbl{font-size:.75rem;font-weight:600;padding:4px 12px;border-radius:99px}
+.lbl.js{background:#1a1a3a;color:#a78bfa}.lbl.dom{background:#2a1a0a;color:#fb923c}
+.lbl.rx{background:#0d2318;color:#4ade80}.lbl.ls{background:#0a1a2a;color:#38bdf8}
+.lbl.cs{background:#1a1030;color:#c084fc}.lbl.rw{background:#2a1a0a;color:#f97316}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:.7rem}
+.st{background:#1e1e28;border-radius:10px;padding:.5rem;text-align:center}
+.sn{font-size:1.1rem;font-weight:600;color:#7c6af7}.sn.g{color:#22c55e}.sn.r{color:#ef4444}
+.sl{font-size:.63rem;color:#8888a8;margin-top:2px}
+.prog{background:#1e1e28;border-radius:10px;padding:.6rem .9rem;margin-bottom:.9rem}
+.pr{display:flex;justify-content:space-between;font-size:.72rem;color:#8888a8;margin-bottom:.3rem}
+.track{background:#2a2a38;border-radius:99px;height:5px;overflow:hidden}
+.fill{height:5px;border-radius:99px;transition:width .3s;width:0%}
+.fill.js{background:linear-gradient(90deg,#7c6af7,#a78bfa)}
+.fill.dom{background:linear-gradient(90deg,#f97316,#fb923c)}
+.fill.rx{background:linear-gradient(90deg,#22c55e,#4ade80)}
+.fill.ls{background:linear-gradient(90deg,#0ea5e9,#38bdf8)}
+.fill.cs{background:linear-gradient(90deg,#9333ea,#c084fc)}
+.fill.rw{background:linear-gradient(90deg,#ea580c,#f97316)}
+.sec{text-align:center;color:#555588;font-size:.68rem;margin:1rem 0 .5rem;display:flex;align-items:center;gap:8px}
+.sec::before,.sec::after{content:"";flex:1;height:1px;background:#2a2a38}
+.card{background:#1e1e28;border-radius:13px;padding:.9rem;margin-bottom:.8rem;border:1px solid #2a2a38}
+.card.ok{border-color:#22c55e}.card.bad{border-color:#ef4444}
+.badge{display:inline-block;font-size:.64rem;padding:2px 7px;border-radius:99px;margin-bottom:.45rem;font-weight:500}
+.qt{font-size:.88rem;line-height:1.6;margin-bottom:.65rem}
+pre{font-family:monospace;background:#080810;border:1px solid #2a2a38;border-radius:7px;padding:.6rem;font-size:.7rem;direction:ltr;text-align:left;overflow-x:auto;margin-bottom:.65rem;line-height:1.5;color:#c9d1d9;white-space:pre-wrap;word-break:break-word}
+.opts{display:flex;flex-direction:column;gap:6px}
+.opt{background:#17171e;border:1px solid #2a2a38;border-radius:9px;padding:.65rem .85rem;font-size:.85rem;color:#e8e8f0;display:flex;align-items:flex-start;gap:8px;cursor:pointer;-webkit-user-select:none;user-select:none}
+.opt.ok{border-color:#22c55e!important;background:#0d2318!important;color:#4ade80!important}
+.opt.bad{border-color:#ef4444!important;background:#250d0d!important;color:#f87171!important}
+.opt.show{border-color:#22c55e!important;background:#0d2318!important;color:#4ade80!important}
+.opt.dim{opacity:.35;pointer-events:none}
+.lt{width:21px;height:21px;min-width:21px;border-radius:50%;background:#2a2a38;display:flex;align-items:center;justify-content:center;font-size:.64rem;font-weight:700;font-family:monospace;flex-shrink:0;margin-top:1px}
+.exp{display:none;margin-top:.6rem;padding:.6rem .8rem;border-radius:7px;font-size:.8rem;line-height:1.55}
+.exp.ok{background:#0d2318;border:1px solid #22c55e44;color:#4ade80}
+.exp.bad{background:#250d0d;border:1px solid #ef444444;color:#f87171}
+.banner{display:none;position:fixed;bottom:1rem;left:50%;transform:translateX(-50%);background:#1a1a25;border:1px solid #7c6af7;border-radius:14px;padding:1.1rem 1.8rem;text-align:center;z-index:99;min-width:240px;box-shadow:0 8px 28px rgba(0,0,0,.8)}
+.bsc{font-size:1.9rem;font-weight:700;background:linear-gradient(135deg,#7c6af7,#f97316);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.bmsg{color:#8888a8;font-size:.8rem;margin-top:.25rem}
+.bbtns{display:flex;gap:8px;margin-top:.75rem}
+.rb,.hb{border:none;border-radius:8px;padding:.45rem .9rem;font-family:inherit;font-size:.82rem;cursor:pointer;flex:1}
+.rb{background:#2a2a38;color:#e8e8f0}.hb{background:#7c6af722;color:#a78bfa;border:1px solid #7c6af744}
+</style>
+</head>
+<body>
+<div id="home">
+  <h1>IT312 - Final Exam Prep</h1>
+  <p class="sub">اختر التشابتر</p>
+  <div class="grid">
+    <div class="ch js" onclick="go('js')"><div class="icon">⚡</div><div class="name">JavaScript</div><div class="cnt">60 سؤال</div></div>
+    <div class="ch dom" onclick="go('dom')"><div class="icon">🌐</div><div class="name">DOM</div><div class="cnt">47 سؤال</div></div>
+    <div class="ch rx" onclick="go('rx')"><div class="icon">🔍</div><div class="name">RegEx</div><div class="cnt">15 سؤال</div></div>
+    <div class="ch ls" onclick="go('ls')"><div class="icon">💾</div><div class="name">LocalStorage</div><div class="cnt">10 سؤال</div></div>
+    <div class="ch cs" onclick="go('cs')"><div class="icon">🎨</div><div class="name">CSS & Flexbox</div><div class="cnt">7 سؤال</div></div>
+    <div class="ch rw" onclick="go('rw')"><div class="icon">📱</div><div class="name">RWD</div><div class="cnt">4 سؤال</div></div>
+    <div class="ch tf" onclick="go('tf')"><div class="icon">📋</div><div class="name">Tables & Forms</div><div class="cnt">12 سؤال</div></div>
+  </div>
+</div>
+<div id="quiz">
+  <div class="qhdr">
+    <button class="back" onclick="goHome()">رجوع</button>
+    <div class="lbl" id="qlbl"></div>
+  </div>
+  <div class="stats">
+    <div class="st"><div class="sn" id="sq">0</div><div class="sl">اجمالي</div></div>
+    <div class="st"><div class="sn" id="sa">0</div><div class="sl">اجبت</div></div>
+    <div class="st"><div class="sn g" id="sc">0</div><div class="sl">صح</div></div>
+    <div class="st"><div class="sn r" id="sw">0</div><div class="sl">غلط</div></div>
+  </div>
+  <div class="prog">
+    <div class="pr"><span>التقدم</span><span id="pt">0/0</span></div>
+    <div class="track"><div class="fill" id="pf"></div></div>
+  </div>
+  <div id="root"></div>
+</div>
+<div class="banner" id="banner">
+  <div class="bsc" id="bsc"></div>
+  <div class="bmsg" id="bmsg"></div>
+  <div class="bbtns">
+    <button class="rb" onclick="retry()">حل من جديد</button>
+    <button class="hb" onclick="goHome()">الرئيسية</button>
+  </div>
+</div>
+<script>
+var D={
+  js:{cl:"js",secs:[
+    {t:"typeof والانواع",ids:["j1","j2","j3","j4","j5","j53","j54"]},
+    {t:"التحويل التلقائي",ids:["j6","j7","j8","j9","j10"]},
+    {t:"parseInt و String Methods",ids:["j11","j12","j13","j14","j15","j16"]},
+    {t:"Arrays",ids:["j17","j18","j19","j52"]},
+    {t:"Scope والفنكشنز",ids:["j20","j21"]},
+    {t:"setTimeout و Math",ids:["j22","j23","j24","j51"]},
+    {t:"Date و Window",ids:["j25","j26","j27","j28"]},
+    {t:"for-in و اضافيات",ids:["j29","j30","j31","j32","j33"]},
+    {t:"صح وخطا T/F",ids:["j34","j35","j36","j37","j38","j39","j40","j46","j47","j48","j49","j50"]},
+    {t:"اوتبت اضافية",ids:["j41","j42","j43"]},
+    {t:"مفاهيم JS",ids:["j44","j45","j55","j56","j57","j58","j59","j60"]}
+  ],qs:[{"id": "j1", "yr": "تكرر 3 فاينلات", "yrc": "#e879f9", "q": "ما ناتج typeof؟", "code": "var x = 'new Date';\ndocument.write(typeof(x));", "opts": ["object", "string", "undefined", "date"], "ans": 1, "exp": "x بين quotes = string وليس object", "isnew": false},
+{"id": "j2", "yr": "تكرر 3 فاينلات", "yrc": "#e879f9", "q": "ما ناتج typeof؟", "code": "var x = new Date;\ndocument.write(typeof(x));", "opts": ["string", "date", "object", "undefined"], "ans": 2, "exp": "new Date بدون quotes = object", "isnew": false},
+{"id": "j3", "yr": "تكرر 4 فاينلات", "yrc": "#e879f9", "q": "ما ناتج typeof؟", "code": "var x = '5' + 1;\ndocument.write(typeof(x));", "opts": ["number", "string", "boolean", "undefined"], "ans": 1, "exp": "+ مع string = دمج. النتيجة string", "isnew": false},
+{"id": "j4", "yr": "تكرر 4 فاينلات", "yrc": "#e879f9", "q": "ما ناتج typeof؟", "code": "var x = '5' * 1;\ndocument.write(typeof(x));", "opts": ["string", "boolean", "number", "undefined"], "ans": 2, "exp": "الضرب يحول string لرقم", "isnew": false},
+{"id": "j5", "yr": "1447", "yrc": "#fb923c", "q": "ما ناتج الكود؟", "code": "var x;\ndocument.write(x);", "opts": ["لا يطبع شيء", "0", "null", "undefined"], "ans": 3, "exp": "var x بدون قيمة = undefined", "isnew": false},
+{"id": "j6", "yr": "تكرر 4 فاينلات", "yrc": "#e879f9", "q": "ما ناتج الكود؟", "code": "var x = '7' * 3;\ndocument.write(x);", "opts": ["73", "NaN", "21", "error"], "ans": 2, "exp": "الضرب يحول 7 لرقم. 7x3=21", "isnew": false},
+{"id": "j7", "yr": "تكرر 4 فاينلات", "yrc": "#e879f9", "q": "ما ناتج الكود؟", "code": "var s = 1 + '0' - 1;\ndocument.write(s);", "opts": ["0", "9", "101", "NaN"], "ans": 1, "exp": "1+0=10 دمج. 10-1=9 طرح", "isnew": false},
+{"id": "j8", "yr": "1447", "yrc": "#fb923c", "q": "ما ناتج الكود؟", "code": "document.write('10' + 1);\ndocument.write('10' - 1);", "opts": ["11 ثم 9", "101 ثم 9", "101 ثم 101", "11 ثم 11"], "ans": 1, "exp": "10+1=101 دمج. 10-1=9 طرح", "isnew": false},
+{"id": "j9", "yr": "1447", "yrc": "#fb923c", "q": "ما ناتج الكود؟", "code": "var x = 0 == false;\ndocument.write(x);", "opts": ["0", "false", "true", "undefined"], "ans": 2, "exp": "في JS الصفر يساوي false", "isnew": false},
+{"id": "j10", "yr": "تكرر 3 فاينلات", "yrc": "#e879f9", "q": "ما ناتج الكود؟", "code": "var a = 2 + 5 + '7';\ndocument.write(a);", "opts": ["257", "14", "77", "NaN"], "ans": 2, "exp": "2+5=7 اولا. ثم 7+7=77 دمج", "isnew": false},
+{"id": "j11", "yr": "تكرر 4 فاينلات", "yrc": "#e879f9", "q": "ما ناتج الكود؟", "code": "var x = parseInt('400SR');\ndocument.write(x);", "opts": ["NaN", "400SR", "400", "error"], "ans": 2, "exp": "parseInt يوقف عند اول حرف. 400", "isnew": false},
+{"id": "j12", "yr": "1445", "yrc": "#818cf8", "q": "ما ناتج الكود؟", "code": "var str = 'the best cake in the world';\nstr.replace('cake','dessert');\ndocument.write(str);", "opts": ["the best cake in the world", "the best dessert in the world", "error", "undefined"], "ans": 0, "exp": "replace لا تغير النص الاصلي", "isnew": false},
+{"id": "j13", "yr": "1447", "yrc": "#fb923c", "q": "ما طول newStr؟", "code": "var str = 'the pig jumped over the lazy dog';\nvar newStr = str.split(/ /);", "opts": ["6", "7", "8", "9"], "ans": 1, "exp": "split يقسم عند كل مسافة: 7 كلمات", "isnew": false},
+{"id": "j14", "yr": "1445", "yrc": "#818cf8", "q": "ما قيمة x؟", "code": "var str = 'one plus one equals two , one plus two equals three';\nvar x = str.lastIndexOf('one');", "opts": ["8", "22", "26", "30"], "ans": 2, "exp": "اخر ظهور لـ one يبدا عند index 26", "isnew": false},
+{"id": "j15", "yr": "1447", "yrc": "#fb923c", "q": "ما الذي يحدث؟", "code": "var x = 'some sentence';\nx.length();", "opts": ["يرجع الطول", "يطبع الطول", "يرجع undefined", "يسبب error"], "ans": 3, "exp": "length خاصية وليست ميثود", "isnew": false},
+{"id": "j16", "yr": "1446", "yrc": "#4ade80", "q": "ما ناتج substring؟", "code": "var str = '###GoodLuck##';\nvar x = str.substring(3, 10);\ndocument.write(x);", "opts": ["##GoodLu", "GoodLuc", "GoodLuck", "#GoodLuc"], "ans": 1, "exp": "index 3=G الى 9=c = GoodLuc", "isnew": false},
+{"id": "j17", "yr": "تكرر 4 فاينلات", "yrc": "#e879f9", "q": "ما ناتج arr.length؟", "code": "var arr = [20,3,4,6];\narr[10] = 6;\ndocument.write(arr.length);", "opts": ["4", "5", "10", "11"], "ans": 3, "exp": "length = اعلى index + 1 = 11", "isnew": false},
+{"id": "j18", "yr": "تكرر 4 فاينلات", "yrc": "#e879f9", "q": "ما ناتج الكود؟", "code": "const arr = [];\narr[2] = 'lemon';\nfor(var i=0; i<arr.length; i++){\n  document.write(arr[i]);\n}", "opts": ["lemon فقط", "undefined ثم lemon", "undefined, undefined, lemon", "error"], "ans": 2, "exp": "arr[0] وarr[1] فارغتان = undefined", "isnew": false},
+{"id": "j19", "yr": "تكرر 4 فاينلات", "yrc": "#e879f9", "q": "ما ناتج push ثم shift؟", "code": "var f = ['Orange','Apple','Strawberry','Lemon'];\nf.push('Banana');\ndocument.write(f);\nf.shift();\ndocument.write(f);", "opts": ["5 عناصر مع Banana ثم 4 بدون Orange", "4 عناصر ثم 4 مع Banana", "5 عناصر ثم نفس 5", "error"], "ans": 0, "exp": "push يضيف Banana. shift يحذف Orange", "isnew": false},
+{"id": "j20", "yr": "تكرر 4 فاينلات", "yrc": "#e879f9", "q": "ما ناتج الكود؟", "code": "var x = 60;\nfunction abs() {\n  var x = 5;\n  document.write(x);\n}\nabs();\ndocument.write(x);", "opts": ["60 ثم 5", "5 ثم 5", "5 ثم 60", "60 ثم 60"], "ans": 2, "exp": "x داخل abs محلي=5. خارجها=60", "isnew": false},
+{"id": "j21", "yr": "تكرر 4 فاينلات", "yrc": "#e879f9", "q": "ما ناتج الكود؟ (الفخ الاصعب)", "code": "a = 5;\nb = 6;\nfunction myFunction() {\n  var a = 50;\n  b = 60;\n}\nmyFunction();\ndocument.write(a);\ndocument.write(b);", "opts": ["50 ثم 60", "5 ثم 6", "5 ثم 60", "50 ثم 6"], "ans": 2, "exp": "a بـ var = محلي. b بدون var = غير العالمي", "isnew": false},
+{"id": "j22", "yr": "تكرر 3 فاينلات", "yrc": "#e879f9", "q": "متى تشتغل surprise؟", "code": "setTimeout(surprise(), 2000);", "opts": ["بعد 2000ms", "فورا عند التحميل", "كل 2000ms", "لا يحدث شيء"], "ans": 1, "exp": "الاقواس () تستدعي surprise فورا", "isnew": false},
+{"id": "j23", "yr": "تكرر 3 فاينلات", "yrc": "#e879f9", "q": "ايهما يطبع اول؟", "code": "setTimeout(f1, 5000);\nsetTimeout(f2, 3000);", "opts": ["5000 ثم 3000", "3000 ثم 5000", "في نفس الوقت", "لا شيء"], "ans": 1, "exp": "f2 تنتظر 3000ms اقل. الاقل وقتا يطبع اول", "isnew": false},
+{"id": "j24", "yr": "1445", "yrc": "#818cf8", "q": "ما قيمة x؟", "code": "var x = Math.floor(-7.7);", "opts": ["-7", "7", "-8", "8"], "ans": 2, "exp": "floor يكمل للاسفل دائما. -7.7 = -8", "isnew": false},
+{"id": "j25", "yr": "اضافي", "yrc": "#4ade80", "q": "getDay() يوم الخميس - ما الناتج؟", "code": "// الاختبار يوم الخميس\nvar x = new Date().getDay();", "opts": ["3", "4", "5", "6"], "ans": 1, "exp": "0=احد 1=اثنين 4=خميس", "isnew": true},
+{"id": "j26", "yr": "اضافي", "yrc": "#4ade80", "q": "ما الفرق بين getDate و getDay؟", "code": null, "opts": ["كلاهما يوم الاسبوع", "getDay=يوم الاسبوع(0-6) | getDate=يوم الشهر(1-31)", "getDay=يوم الشهر | getDate=يوم الاسبوع", "كلاهما نفس الشيء"], "ans": 1, "exp": "getDay = يوم الاسبوع. getDate = رقم اليوم في الشهر", "isnew": true},
+{"id": "j27", "yr": "اضافي", "yrc": "#4ade80", "q": "اي ميثود فيه مربع ادخال؟", "code": "alert('msg');\nconfirm('msg');\nprompt('msg','');", "opts": ["alert فقط", "confirm فقط", "prompt فقط", "كلهم"], "ans": 2, "exp": "prompt هو الوحيد اللي فيه مربع نص", "isnew": true},
+{"id": "j28", "yr": "اضافي", "yrc": "#4ade80", "q": "ما يرجعه confirm عند Cancel؟", "code": "var result = confirm('هل تريد؟');\ndocument.write(result);", "opts": ["null", "0", "false", "undefined"], "ans": 2, "exp": "confirm يرجع true عند OK و false عند Cancel", "isnew": true},
+{"id": "j29", "yr": "اضافي", "yrc": "#4ade80", "q": "ما ناتج obj.b؟", "code": "var obj = {a:1, b:2};\nfor(var prop in obj){\n  obj[prop] = obj[prop] * 2;\n}\ndocument.write(obj.b);", "opts": ["2", "4", "6", "error"], "ans": 1, "exp": "b كانت 2 وضربت في 2 = 4", "isnew": true},
+{"id": "j30", "yr": "اضافي", "yrc": "#4ade80", "q": "ماذا يطبع prop؟", "code": "var obj = {name:'Ali', age:20};\nfor(var prop in obj){\n  document.write(prop);\n}", "opts": ["Ali ثم 20", "name ثم age", "obj.name ثم obj.age", "error"], "ans": 1, "exp": "for-in يطبع اسماء الخصائص", "isnew": true},
+{"id": "j31", "yr": "اضافي", "yrc": "#4ade80", "q": "ما ناتج Math.floor(7.9)؟", "code": "var x = Math.floor(7.9);\ndocument.write(x);", "opts": ["7", "8", "7.9", "error"], "ans": 0, "exp": "floor يكمل للاسفل. 7.9 = 7", "isnew": true},
+{"id": "j32", "yr": "اضافي", "yrc": "#4ade80", "q": "ما ناتج isNaN؟", "code": "var a = 'Hello' * 3;\ndocument.write(isNaN(a));", "opts": ["false", "0", "true", "Hello3"], "ans": 2, "exp": "Hello*3 = NaN. isNaN(NaN) = true", "isnew": true},
+{"id": "j33", "yr": "اضافي", "yrc": "#4ade80", "q": "الفرق بين parseInt و parseFloat؟", "code": "parseInt('44.99SR');\nparseFloat('44.99SR');", "opts": ["كلاهما 44", "parseInt=44 | parseFloat=44.99", "كلاهما 44.99", "كلاهما NaN"], "ans": 1, "exp": "parseInt يوقف عند النقطة. parseFloat يقبلها", "isnew": true},
+{"id": "j34", "yr": "1445", "yrc": "#818cf8", "q": "صح ام خطا: use unobtrusive javascript is bad style", "code": null, "opts": ["صح", "خطا"], "ans": 1, "exp": "خطا - obtrusive هو السيء. unobtrusive = الصحيح", "isnew": false},
+{"id": "j35", "yr": "1445", "yrc": "#818cf8", "q": "صح ام خطا: querySelectorAll accesses the value of a given attribute", "code": null, "opts": ["صح", "خطا"], "ans": 1, "exp": "خطا - getAttribute هي اللي تقرا قيمة الـ attribute", "isnew": false},
+{"id": "j36", "yr": "1445", "yrc": "#818cf8", "q": "صح ام خطا: accessing a[16] when a[0]=4 and a[15]=67 will not cause error", "code": null, "opts": ["صح", "خطا"], "ans": 0, "exp": "صح - JS ما عندها out of boundaries error", "isnew": false},
+{"id": "j37", "yr": "1445", "yrc": "#818cf8", "q": "صح ام خطا: Do-while is used when programmer needs to make a decision", "code": null, "opts": ["صح", "خطا"], "ans": 1, "exp": "خطا - if statement هو اللي يسوي قرار", "isnew": false},
+{"id": "j38", "yr": "1445", "yrc": "#818cf8", "q": "صح ام خطا: Math.MIN_VALUE gives the largest value possible", "code": null, "opts": ["صح", "خطا"], "ans": 1, "exp": "خطا - MIN_VALUE يعطي اصغر قيمة موجبة", "isnew": false},
+{"id": "j39", "yr": "1446", "yrc": "#4ade80", "q": "صح ام خطا: Framework simplifies DOM manipulation", "code": null, "opts": ["صح", "خطا"], "ans": 0, "exp": "صح - الـ Frameworks تبسط DOM", "isnew": false},
+{"id": "j40", "yr": "1446", "yrc": "#4ade80", "q": "صح ام خطا: PHP, Ruby are used with web applications", "code": null, "opts": ["صح", "خطا"], "ans": 0, "exp": "صح - PHP و Ruby لغات server-side", "isnew": false},
+{"id": "j41", "yr": "1446", "yrc": "#4ade80", "q": "ما ناتج الكود؟", "code": "a = 'Hello' * 3;\ndocument.write(isNaN(a));", "opts": ["false", "Hello3", "true", "error"], "ans": 2, "exp": "Hello*3 = NaN. isNaN(NaN) = true", "isnew": false},
+{"id": "j42", "yr": "1446", "yrc": "#4ade80", "q": "ما ناتج الكود؟", "code": "document.write(3 > 2 > 1);", "opts": ["true", "false", "1", "error"], "ans": 1, "exp": "(3>2)=true=1. ثم 1>1=false", "isnew": false},
+{"id": "j43", "yr": "1445", "yrc": "#818cf8", "q": "ما ناتج الكود؟", "code": "var x = 'some sentence';\nvar len = x.length;\ndocument.write(len);", "opts": ["11", "12", "13", "14"], "ans": 2, "exp": "some sentence = 13 حرف مع المسافة", "isnew": false},
+{"id": "j44", "yr": "فاينل قديم", "yrc": "#818cf8", "q": "ما الذي لا يمكن لـ client-side JS ان يفعله؟", "code": null, "opts": ["تحديث محتوى الصفحة", "حفظ البيانات في قاعدة بيانات على السيرفر", "التحقق من صحة فورم", "ارسال محتوى فورم بايميل"], "ans": 1, "exp": "client-side JS لا تقدر تحفظ في database على السيرفر", "isnew": false},
+{"id": "j45", "yr": "فاينل قديم", "yrc": "#818cf8", "q": "اين تنفذ JavaScript عند فتح صفحة؟", "code": null, "opts": ["Web server", "JEE virtual machine", "جهاز المستخدم اللي يشغل المتصفح", "Netscape offices"], "ans": 2, "exp": "JS تنفذ على جهاز المستخدم client-side", "isnew": false},
+{"id": "j46", "yr": "فاينل قديم", "yrc": "#818cf8", "q": "صح ام خطا: JavaScript is interpreted and not compiled", "code": null, "opts": ["صح", "خطا"], "ans": 0, "exp": "صح - JS لغة interpreted", "isnew": false},
+{"id": "j47", "yr": "فاينل قديم", "yrc": "#818cf8", "q": "صح ام خطا: In JavaScript types are associated with values not variables", "code": null, "opts": ["صح", "خطا"], "ans": 0, "exp": "صح - النوع مرتبط بالقيمة وليس بالمتغير", "isnew": false},
+{"id": "j48", "yr": "فاينل قديم", "yrc": "#818cf8", "q": "صح ام خطا: Double and float are primitive types in JavaScript", "code": null, "opts": ["صح", "خطا"], "ans": 1, "exp": "خطا - JS ما عندها double او float. عندها number فقط", "isnew": false},
+{"id": "j49", "yr": "فاينل قديم", "yrc": "#818cf8", "q": "صح ام خطا: In JavaScript only assigned elements of array occupy space", "code": null, "opts": ["صح", "خطا"], "ans": 0, "exp": "صح - الـ gaps تعطي undefined لكن لا تاخذ مساحة", "isnew": false},
+{"id": "j50", "yr": "فاينل قديم", "yrc": "#818cf8", "q": "صح ام خطا: parseInt converts an integer to a string", "code": null, "opts": ["صح", "خطا"], "ans": 1, "exp": "خطا - parseInt يحول string لـ integer", "isnew": false},
+{"id": "j51", "yr": "فاينل قديم", "yrc": "#818cf8", "q": "ايهم يستدعي F1 مرة واحدة بعد 6 ثوان؟", "code": null, "opts": ["setTimeout(F1, 6000)", "setTimeout(F1(), 6000)", "setInterval(F1(), 6000)", "setInterval(F1, 6)"], "ans": 0, "exp": "setTimeout(F1, 6000) بدون اقواس وبالملي ثانية", "isnew": false},
+{"id": "j52", "yr": "فاينل قديم", "yrc": "#818cf8", "q": "ما ناتج الكود؟", "code": "var a=['Red','Orange','Yellow','Green','Purple'];\nvar result='';\nfor(var i=0; i<a.length; i++){\n  var s=a[i];\n  var c=s.substr(i,1);\n  if(c=='e'){result+=s;}\n}\ndocument.write(result);", "opts": ["RedYellowGreen", "Green", "RedYellowGreenPurple", "RedYellow"], "ans": 1, "exp": "i=3: Green[3]=e تطابق. الناتج: Green", "isnew": false},
+{"id": "j53", "yr": "فاينل قديم", "yrc": "#818cf8", "q": "ما ناتج typeof لـ X=[1,2,3,4]؟", "code": "X = [1,2,3,4];\ntypeof(X);", "opts": ["number", "string", "object", "array"], "ans": 2, "exp": "في JS المصفوفات نوعها object", "isnew": false},
+{"id": "j54", "yr": "فاينل قديم", "yrc": "#818cf8", "q": "ما ناتج typeof لـ var car; X=car؟", "code": "var car;\nX = car;\ntypeof(X);", "opts": ["null", "number", "string", "undefined"], "ans": 3, "exp": "car بدون قيمة = undefined", "isnew": false},
+{"id": "j55", "yr": "فاينل قديم", "yrc": "#818cf8", "q": "ما الذي يستخدم لربط script بـ event؟", "code": null, "opts": ["Registration", "Node", "Event", "DOM"], "ans": 0, "exp": "Registration هو نشاط ربط الـ script بنوع حدث", "isnew": false},
+{"id": "j56", "yr": "فاينل قديم", "yrc": "#818cf8", "q": "Which value is NOT interpreted as false in JavaScript?", "code": null, "opts": ["0", "0.0", "\"false\"", "1"], "ans": 3, "exp": "1 ليست false. 0 و 0.0 و false string كلها تعتبر false", "isnew": false},
+{"id": "j57", "yr": "فاينل قديم", "yrc": "#818cf8", "q": "JavaScript is generally used as?", "code": null, "opts": ["server-side scripting", "client-side scripting", "application development", "embedded mobile language"], "ans": 1, "exp": "JS تستخدم كـ client-side scripting language", "isnew": false},
+{"id": "j58", "yr": "فاينل قديم", "yrc": "#818cf8", "q": "Which of the following is FALSE about DOM?", "code": null, "opts": ["DOM is a programming interface for accessing documents", "DOM provides a structured tree", "DOM is only used with JavaScript", "DOM is independent programming interface"], "ans": 2, "exp": "خطا - DOM يمكن استخدامه مع لغات اخرى غير JS", "isnew": false},
+{"id": "j59", "yr": "فاينل قديم", "yrc": "#818cf8", "q": "What is the output?", "code": "Var num = 16;\nVar res = 5;\nres = multiple(num);\nalert('num: ' + num + ', res: ' + res);\nfunction multiple(a){\n  a = a*2;\n  return a;\n}", "opts": ["num: 32, res: 32", "num: 16, res: 32", "num: 16, res: 16", "num: 32, res: 16"], "ans": 1, "exp": "num لم يتغير = 16. multiple(16) = 32 ويرجعها لـ res", "isnew": false},
+{"id": "j60", "yr": "فاينل قديم", "yrc": "#818cf8", "q": "function f(a,b,c) — what happens when calling f(a,b)?", "code": null, "opts": ["error", "c = undefined", "c = null", "c = 0"], "ans": 1, "exp": "لو parameter ناقص = undefined", "isnew": false},
+{"id": "j61", "yr": "فاينل قديم", "yrc": "#818cf8", "q": "function f(a,b,c) — what happens when calling f(a,b,c,d)?", "code": null, "opts": ["error", "d = undefined", "d is ignored", "d = null"], "ans": 2, "exp": "لو parameter زيادة = يتجاهل", "isnew": false},
+{"id": "j56", "yr": "فاينل قديم", "yrc": "#818cf8", "q": "ما ناتج الكود؟", "code": "Var num = 16;\nVar res = 5;\nres = multiple(num);\nalert('num: ' + num + ', res: ' + res);\nfunction multiple(a){\n  a = a*2;\n  return a;\n}", "opts": ["num: 32, res: 32", "num: 16, res: 32", "num: 16, res: 5", "num: 32, res: 16"], "ans": 1, "exp": "num لم يتغير (pass by value). res = 16*2 = 32", "isnew": false},
+{"id": "j57", "yr": "فاينل قديم", "yrc": "#818cf8", "q": "Which value is NOT interpreted as false in JavaScript?", "code": null, "opts": ["0", "0.0", "\"false\"", "1"], "ans": 3, "exp": "1 = true. 0 و 0.0 و empty string كلها false", "isnew": false},
+{"id": "j58", "yr": "فاينل قديم", "yrc": "#818cf8", "q": "JavaScript is generally used as:", "code": null, "opts": ["server-side scripting language", "client-side scripting language", "application development language", "embedded language for mobile"], "ans": 1, "exp": "JS تُستخدم كـ client-side scripting language", "isnew": false},
+{"id": "j59", "yr": "فاينل قديم", "yrc": "#818cf8", "q": "Which one is false about DOM?", "code": null, "opts": ["DOM is a programming interface to access HTML", "DOM provides a structured tree", "DOM is only used with JavaScript", "DOM is an independent programming interface"], "ans": 2, "exp": "خطا - DOM مو بس لـ JS. يمكن استخدامه مع لغات اخرى", "isnew": false},
+{"id": "j60", "yr": "فاينل قديم", "yrc": "#818cf8", "q": "Which is NOT a primitive type in JavaScript?", "code": null, "opts": ["Character", "Boolean", "String", "NULL"], "ans": 0, "exp": "Character مو موجود في JS. الانواع: number, string, boolean, undefined, object", "isnew": false}]},
+  dom:{cl:"dom",secs:[
+    {t:"الوصول للعناصر",ids:["d1","d2","d3","d4","d5","d42"]},
+    {t:"forms Array",ids:["d6","d7","d8","d9","d46"]},
+    {t:"Events",ids:["d10","d11","d12","d13","d43","d44"]},
+    {t:"onmouseover / onmouseout",ids:["d14","d15"]},
+    {t:"parentNode",ids:["d16","d17","d18","d30","d31","d32"]},
+    {t:"تعديل المحتوى",ids:["d19","d20","d21","d45"]},
+    {t:"كتابة الكود الكامل",ids:["d22","d23","d33","d34","d35","d36","d37"]},
+    {t:"Unobtrusive JS",ids:["d24","d25","d47"]},
+    {t:"صح وخطا T/F",ids:["d26","d27","d28","d29"]},
+    {t:"MCQ من الفاينلات",ids:["d38","d39","d40","d41"]}
+  ],qs:[{"id": "d1", "yr": "تكرر 3 فاينلات", "yrc": "#fb923c", "q": "ما الميثود الصحيحة للوصول لعنصر بالـ id؟", "code": "// <div id=\"myBox\">", "opts": ["document.getElement", "document.getElementsById", "document.getElementById", "document.querySelector[0]"], "ans": 2, "exp": "getElementById بدون s. يرجع عنصر واحد", "isnew": false},
+{"id": "d2", "yr": "1447", "yrc": "#fb923c", "q": "الفرق بين getElementById و getElementsByTagName؟", "code": null, "opts": ["كلاهما يرجع عنصر واحد", "getElementById يرجع واحد | getElementsByTagName يرجع مجموعة", "كلاهما مجموعة", "لا فرق"], "ans": 1, "exp": "getElementById بدون s = عنصر. getElementsByTagName بالـ s = مجموعة", "isnew": false},
+{"id": "d3", "yr": "تكرر 3 فاينلات", "yrc": "#fb923c", "q": "ما الصحيح بخصوص querySelectorAll؟", "code": null, "opts": ["querySelectorAll تقرا قيمة الـ attribute", "getAttribute تقرا قيمة الـ attribute", "كلاهما يقراان الـ attribute", "لا شيء صح"], "ans": 1, "exp": "getAttribute هي اللي تقرا قيمة الـ attribute", "isnew": false},
+{"id": "d4", "yr": "اضافي", "yrc": "#4ade80", "q": "كيف تقرا محتوى div؟", "code": "<div id=\"box\">مرحبا</div>", "opts": ["getElementById.value", "getElementById.innerHTML", "getElementById.src", "getElementById.href"], "ans": 1, "exp": "innerHTML لاي عنصر HTML. value للـ inputs فقط", "isnew": true},
+{"id": "d5", "yr": "اضافي", "yrc": "#4ade80", "q": "كيف تقرا قيمة input نصي؟", "code": "<input type=\"text\" id=\"name\">", "opts": ["getElementById.innerHTML", "getElementById.text", "getElementById.value", "getElementById.content"], "ans": 2, "exp": ".value للـ inputs", "isnew": true},
+{"id": "d6", "yr": "تكرر 3 فاينلات", "yrc": "#fb923c", "q": "ما ناتج forms[1].elements[0]؟", "code": "<form name='loginForm'>\n  <input type='text' name='username'>\n</form>\n<form name='registerForm'>\n  <input type='email' name='email'>\n</form>", "opts": ["username", "email", "loginForm", "Not accessible"], "ans": 1, "exp": "forms[1] = الفورم الثاني. elements[0] = email", "isnew": false},
+{"id": "d7", "yr": "تكرر 3 فاينلات", "yrc": "#fb923c", "q": "ما ناتج forms[2].elements[0] اذا في فورمين فقط؟", "code": null, "opts": ["username", "email", "Not accessible", "undefined"], "ans": 2, "exp": "ما في فورم ثالث = Not accessible", "isnew": false},
+{"id": "d8", "yr": "تكرر 3 فاينلات", "yrc": "#fb923c", "q": "ما ناتج forms[0].elements[0].parentNode؟", "code": null, "opts": ["username", "email", "loginForm", "registerForm"], "ans": 2, "exp": "اب الـ input = الـ form نفسه", "isnew": false},
+{"id": "d9", "yr": "تكرر 3 فاينلات", "yrc": "#fb923c", "q": "ما ناتج getElementById اذا ما وجد عنصر؟", "code": null, "opts": ["undefined", "0", "Not accessible", "null"], "ans": 2, "exp": "اذا ما وجد = Not accessible", "isnew": false},
+{"id": "d10", "yr": "تكرر 4 فاينلات", "yrc": "#fb923c", "q": "الفرق بين onclick = myHandler و onclick = myHandler()؟", "code": null, "opts": ["كلاهما عند الضغط", "الاول عند الضغط | الثاني فورا", "الثاني عند الضغط | الاول فورا", "كلاهما فورا"], "ans": 1, "exp": "بدون () = عند الضغط. بالاقواس = فورا", "isnew": false},
+{"id": "d11", "yr": "1445", "yrc": "#fb923c", "q": "صح ام خطا: use unobtrusive javascript is bad style", "code": null, "opts": ["صح", "خطا"], "ans": 1, "exp": "خطا - unobtrusive هو الاسلوب الصحيح", "isnew": false},
+{"id": "d12", "yr": "اضافي", "yrc": "#4ade80", "q": "ما الـ event المناسب بعد تحميل الصفحة؟", "code": null, "opts": ["onclick", "onload", "onchange", "onsubmit"], "ans": 1, "exp": "onload ينفذ بعد اكتمال تحميل الصفحة", "isnew": true},
+{"id": "d13", "yr": "اضافي", "yrc": "#4ade80", "q": "ما الـ event للتحقق من الفورم قبل الارسال؟", "code": null, "opts": ["onclick", "onload", "onchange", "onsubmit"], "ans": 3, "exp": "onsubmit ينفذ عند ارسال الفورم", "isnew": true},
+{"id": "d14", "yr": "تكرر 4 فاينلات", "yrc": "#fb923c", "q": "ما ناتج fun1 عند mouseover؟", "code": "function fun1(obj) {\n  var str1 = 'Mouse over';\n  var str2 = str1.toUpperCase();\n  obj.innerText = str2;\n}", "opts": ["Mouse over", "MOUSE OVER", "mouse over", "Welcome to IT312"], "ans": 1, "exp": "toUpperCase تحول الحروف لكبيرة", "isnew": false},
+{"id": "d15", "yr": "تكرر 4 فاينلات", "yrc": "#fb923c", "q": "ما ناتج fun2 عند mouseout؟", "code": "function fun2(obj) {\n  var str1 = '###GoodLuck##';\n  var str2 = str1.substring(3, 10);\n  obj.innerHTML = str2;\n}", "opts": ["###GoodLu", "GoodLuc", "GoodLuck", "#GoodLuc"], "ans": 1, "exp": "substring(3,10) = GoodLuc", "isnew": false},
+{"id": "d16", "yr": "تكرر 3 فاينلات", "yrc": "#fb923c", "q": "ما ناتج parentNode؟", "code": "<p><span><em>some text</em></span></p>\nvar em = document.getElementsByTagName('em')[0];\nvar NewNode = em.parentNode;", "opts": ["p", "em", "span", "text node"], "ans": 2, "exp": "الشجرة: p > span > em. اب الـ em = span", "isnew": false},
+{"id": "d17", "yr": "تكرر 3 فاينلات", "yrc": "#fb923c", "q": "ما ناتج getElementById(findme).className؟", "code": "<tr class='trow'><td id='findme' class='high'>find me</td></tr>", "opts": ["trow", "high", "findme", "td"], "ans": 1, "exp": "className الـ td نفسه = high", "isnew": false},
+{"id": "d18", "yr": "تكرر 3 فاينلات", "yrc": "#fb923c", "q": "ما ناتج getElementById(findme).parentNode.className؟", "code": "<tr class='trow'><td id='findme' class='high'>find me</td></tr>", "opts": ["trow", "high", "findme", "td"], "ans": 0, "exp": "اب الـ td = tr. class = trow", "isnew": false},
+{"id": "d19", "yr": "تكرر 3 فاينلات", "yrc": "#fb923c", "q": "كيف تفرغ input؟", "code": "// id = \"numbers\"", "opts": ["getElementById(\"numbers\").innerHTML = \"\"", "getElementById(\"numbers\").value = \"\"", "getElementById(\"numbers\").text = \"\"", "getElementById(\"numbers\").clear()"], "ans": 1, "exp": ".value = فراغ تفرغ الـ input", "isnew": false},
+{"id": "d20", "yr": "اضافي", "yrc": "#4ade80", "q": "كيف تغير لون عنصر؟", "code": null, "opts": ["element.color = 'red'", "element.style.color = 'red'", "element.style = 'red'", "element.setAttribute('color','red')"], "ans": 1, "exp": ".style.color الطريقة الصحيحة", "isnew": true},
+{"id": "d21", "yr": "اضافي", "yrc": "#4ade80", "q": "الفرق بين display:none و visibility:hidden؟", "code": null, "opts": ["كلاهما يخفيان فقط", "display:none يزيل المساحة | visibility:hidden يبقيها", "visibility:hidden يزيل | display:none يبقي", "لا فرق"], "ans": 1, "exp": "display:none يزيل العنصر كليا. visibility:hidden يخفيه ويبقي مساحته", "isnew": true},
+{"id": "d22", "yr": "تكرر 3 فاينلات", "yrc": "#fb923c", "q": "اين تضع handler.js؟", "code": "<head>A</head><body>B...C</body>", "opts": ["A داخل head", "B بداية body", "C قبل /body", "اي مكان"], "ans": 2, "exp": "C قبل /body عشان DOM يكتمل اولا", "isnew": false},
+{"id": "d23", "yr": "تكرر 3 فاينلات", "yrc": "#fb923c", "q": "كيف تقرا قيمة input وتعرضها في div؟", "code": "<input type=\"text\" id=\"myInput\">\n<div id=\"result\"></div>", "opts": ["getElementById(myInput).innerHTML; getElementById(result).value", "getElementById(myInput).value; getElementById(result).innerHTML", "getElementById(myInput).value; getElementById(result).value", "getElementById(myInput).innerHTML; getElementById(result).innerHTML"], "ans": 1, "exp": "input = .value للقراءة. div = .innerHTML للكتابة", "isnew": false},
+{"id": "d24", "yr": "1445", "yrc": "#fb923c", "q": "ما معنى Unobtrusive JavaScript؟", "code": null, "opts": ["الكود داخل HTML", "فصل الكود عن HTML واستخدام DOM", "كتابة كود قصير", "استخدام alert"], "ans": 1, "exp": "Unobtrusive = HTML نظيف. الكود منفصل", "isnew": false},
+{"id": "d25", "yr": "اضافي", "yrc": "#4ade80", "q": "الفرق بين setTimeout و setInterval؟", "code": null, "opts": ["كلاهما مرة واحدة", "setTimeout مرة واحدة | setInterval يتكرر", "setInterval مرة واحدة | setTimeout يتكرر", "كلاهما يتكرران"], "ans": 1, "exp": "setTimeout مرة. setInterval يتكرر", "isnew": false},
+{"id": "d26", "yr": "1445", "yrc": "#fb923c", "q": "صح ام خطا: Action attribute determines get or post", "code": null, "opts": ["صح", "خطا"], "ans": 1, "exp": "خطا - method attribute هو اللي يحدد. action يحدد وين يرسل", "isnew": false},
+{"id": "d27", "yr": "1445", "yrc": "#fb923c", "q": "صح ام خطا: align-items applies to flex item", "code": null, "opts": ["صح", "خطا"], "ans": 1, "exp": "خطا - align-items تطبق على flex container", "isnew": false},
+{"id": "d28", "yr": "1446", "yrc": "#fb923c", "q": "صح ام خطا: WAI is responsible for making web technologies accessible", "code": null, "opts": ["صح", "خطا"], "ans": 0, "exp": "صح - WAI مسؤولة عن معايير امكانية الوصول", "isnew": false},
+{"id": "d29", "yr": "1446", "yrc": "#fb923c", "q": "صح ام خطا: meta viewport prevents zooming", "code": null, "opts": ["صح", "خطا"], "ans": 1, "exp": "خطا - viewport لا يمنع الـ zoom", "isnew": false},
+{"id": "d30", "yr": "1446", "yrc": "#fb923c", "q": "ما ناتج getElementById(findme).className؟", "code": "<table><tbody><tr class='trow'><td id='findme' class='high'>find me</td></tr></tbody></table>", "opts": ["trow", "high", "findme", "td"], "ans": 1, "exp": "className الـ td = high", "isnew": false},
+{"id": "d31", "yr": "1446", "yrc": "#fb923c", "q": "ما ناتج getElementById(findme).parentNode.className؟", "code": "<table><tbody><tr class='trow'><td id='findme' class='high'>find me</td></tr></tbody></table>", "opts": ["trow", "high", "findme", "td"], "ans": 0, "exp": "اب الـ td = tr. class = trow", "isnew": false},
+{"id": "d32", "yr": "1446", "yrc": "#fb923c", "q": "كم parentNode للوصول من td لـ table؟", "code": "table > tbody > tr > td#findme", "opts": ["مرة", "مرتين", "ثلاث مرات", "اربع مرات"], "ans": 2, "exp": "td > tr > tbody > table = ثلاث مرات", "isnew": false},
+{"id": "d33", "yr": "1447", "yrc": "#fb923c", "q": "كيف تقرا قيمة input id=length؟", "code": null, "opts": ["getElementById(\"length\").innerHTML", "getElementById(\"length\").value", "getElementById(\"length\").text", "getElementsById(\"length\").value"], "ans": 1, "exp": ".value للـ inputs", "isnew": false},
+{"id": "d34", "yr": "1447", "yrc": "#fb923c", "q": "كيف تعرض النتيجة في div id=result؟", "code": null, "opts": ["getElementById(\"result\").value = area", "getElementById(\"result\").innerHTML = area", "getElementById(\"result\").text = area", "getElementsById(\"result\").innerHTML = area"], "ans": 1, "exp": ".innerHTML للـ div", "isnew": false},
+{"id": "d35", "yr": "1447", "yrc": "#fb923c", "q": "كيف تربط زر بفنكشن في handel.js؟", "code": null, "opts": ["getElementById(\"btn\").onclick = calculateArea()", "getElementById(\"btn\").onclick = calculateArea", "getElementById(\"btn\").click = calculateArea", "getElementById(\"btn\").onlick = calculateArea"], "ans": 1, "exp": "onclick = calculateArea بدون اقواس", "isnew": false},
+{"id": "d36", "yr": "1447", "yrc": "#fb923c", "q": "اين تضع handel.js؟", "code": "<head>A</head><body>B...C</body>", "opts": ["A داخل head", "B بداية body", "C قبل /body", "اي مكان"], "ans": 2, "exp": "C قبل /body", "isnew": false},
+{"id": "d37", "yr": "1447", "yrc": "#fb923c", "q": "كيف تفرغ input id=numbers؟", "code": null, "opts": ["getElementById(\"numbers\").innerHTML = \"\"", "getElementById(\"numbers\").value = \"\"", "getElementById(\"numbers\").clear()", "getElementById(\"numbers\").reset()"], "ans": 1, "exp": ".value = فراغ", "isnew": false},
+{"id": "d38", "yr": "1445", "yrc": "#818cf8", "q": "What is NOT an attribute for radio button?", "code": null, "opts": ["name", "value", "checked", "selected"], "ans": 3, "exp": "selected مو attribute للـ radio", "isnew": false},
+{"id": "d39", "yr": "1446", "yrc": "#4ade80", "q": "label داخل input بدون for - نوع الربط؟", "code": "<label> red <input type='text' name='Color'> </label>", "opts": ["explicitly", "implicitly", "لا ربط", "error"], "ans": 1, "exp": "implicitly = input داخل label", "isnew": false},
+{"id": "d40", "yr": "1446", "yrc": "#4ade80", "q": "for input type=file what encoding method?", "code": null, "opts": ["GET", "POST", "PUT", "DELETE"], "ans": 1, "exp": "POST للملفات", "isnew": false},
+{"id": "d41", "yr": "1446", "yrc": "#4ade80", "q": "How to remove underline from hyperlinks?", "code": null, "opts": ["decoration: no underline", "underline: none", "text-decoration: none", "decoration: none"], "ans": 2, "exp": "text-decoration: none", "isnew": false},
+{"id": "d42", "yr": "فاينل قديم", "yrc": "#fb923c", "q": "ايهم يمكن الوصول لعناصر HTML باستخدام JS؟", "code": null, "opts": ["اسم التاق", "forms array", "class attributes", "كل ما سبق"], "ans": 3, "exp": "يمكن الوصول بأي طريقة", "isnew": false},
+{"id": "d43", "yr": "فاينل قديم", "yrc": "#fb923c", "q": "صح ام خطا: Every HTML element is represented in DOM tree", "code": null, "opts": ["صح", "خطا"], "ans": 0, "exp": "صح - كل عنصر HTML يمثل node في DOM", "isnew": false},
+{"id": "d44", "yr": "فاينل قديم", "yrc": "#fb923c", "q": "صح ام خطا: JS code must be in HTML header only", "code": null, "opts": ["صح", "خطا"], "ans": 1, "exp": "خطا - يمكن وضع JS في head او body", "isnew": false},
+{"id": "d45", "yr": "فاينل قديم", "yrc": "#fb923c", "q": "كيف تغير محتوى عنصر id=myElement لـ IT312؟", "code": null, "opts": ["document.getElementById(\"myElement\").innerHTML = \"IT312\"", "html[\"myElement\"] = \"IT312\"", "document.getElementById(\"myElement\").content = \"IT312\"", "getElementById(\"myElement\").innerHTML = \"IT312\""], "ans": 0, "exp": "document.getElementById + .innerHTML", "isnew": false},
+{"id": "d46", "yr": "فاينل قديم", "yrc": "#fb923c", "q": "ما الناتج اذا طبعتِ forms[2] وعندك فقط فورمين؟", "code": null, "opts": ["صفر", "Not accessible", "undefined", "error"], "ans": 1, "exp": "ما في forms[2] = Not accessible", "isnew": false},
+{"id": "d47", "yr": "فاينل قديم", "yrc": "#fb923c", "q": "ما الـ input type اللي يخصص بـ JS؟", "code": null, "opts": ["reset", "submit", "text", "button"], "ans": 3, "exp": "input type=button يخصص بـ JS", "isnew": false}]},
+  rx:{cl:"rx",secs:[
+    {t:"match - اوتبت",ids:["r1","r2","r3","r4","r5"]},
+    {t:"الفروقات الاساسية",ids:["r6","r7","r8"]},
+    {t:"Modifiers و Patterns",ids:["r9","r10","r11","r15"]},
+    {t:"replace و search",ids:["r12","r13","r14"]}
+  ],qs:[{"id": "r1", "yr": "1446", "yrc": "#4ade80", "q": "ما ناتج الكود؟", "code": "var text = 'I, 10 1000?';\nvar result = text.match(/10?/);\ndocument.write(result);", "opts": ["10", "1", "null", "error"], "ans": 0, "exp": "/10?/ اول تطابق = 10", "isnew": false},
+{"id": "r2", "yr": "اضافي", "yrc": "#4ade80", "q": "ما ناتج match(d)?", "code": "var text = 'this test is no 44 which is 8 times harder';\ndocument.write(text.match(/\\d/));", "opts": ["4", "44", "4,4,8", "null"], "ans": 0, "exp": "\\d = رقم واحد. بدون g = اول رقم", "isnew": true},
+{"id": "r3", "yr": "اضافي", "yrc": "#4ade80", "q": "ما ناتج match(d) مع g؟", "code": "var text = 'this test is no 44 which is 8 times harder';\ndocument.write(text.match(/\\d/g));", "opts": ["44,8", "4,4,8", "4", "null"], "ans": 1, "exp": "\\d مع g = كل الارقام. 44 = رقمين", "isnew": true},
+{"id": "r4", "yr": "اضافي", "yrc": "#4ade80", "q": "ما ناتج match(d+) مع g؟", "code": "var text = 'this test is no 44 which is 8 times harder';\ndocument.write(text.match(/\\d+/g));", "opts": ["4,4,8", "44,8", "44", "null"], "ans": 1, "exp": "\\d+ مع g = كل التسلسلات", "isnew": true},
+{"id": "r5", "yr": "1446", "yrc": "#818cf8", "q": "ما ناتج match(/10?/g) في I, 10 1000?", "code": null, "opts": ["10", "1,10,10,10", "10,10,10", "1"], "ans": 2, "exp": "مع g كل التطابقات. /10?/ تطابق 10 ثلاث مرات", "isnew": false},
+{"id": "r6", "yr": "اضافي", "yrc": "#4ade80", "q": "الفرق بين d و d+ في RegEx?", "code": null, "opts": ["لا فرق", "d = رقم واحد | d+ = تسلسل ارقام", "d = تسلسل | d+ = رقم واحد", "كلاهما نفس النتيجة"], "ans": 1, "exp": "\\d = رقم واحد. \\d+ = تسلسل", "isnew": true},
+{"id": "r7", "yr": "اضافي", "yrc": "#4ade80", "q": "الفرق بين match بدون g ومع g؟", "code": null, "opts": ["لا فرق", "بدون g = اول تطابق | مع g = كل التطابقات", "مع g = اول | بدون g = الكل", "كلاهما نفس النتيجة"], "ans": 1, "exp": "بدون g = اول. مع g = كل", "isnew": true},
+{"id": "r8", "yr": "اضافي", "yrc": "#4ade80", "q": "ما ناتج search لو ما وجد تطابق؟", "code": "var text = 'hello';\ndocument.write(text.search(/xyz/));", "opts": ["null", "undefined", "0", "-1"], "ans": 3, "exp": "search يرجع -1 لو ما وجد", "isnew": true},
+{"id": "r9", "yr": "اضافي", "yrc": "#4ade80", "q": "ما معنى modifier i في RegEx؟", "code": null, "opts": ["ابحث عن الكل", "تجاهل كبير وصغير", "ابحث من النهاية", "ابحث سطر سطر"], "ans": 1, "exp": "/i = تجاهل الحالة", "isnew": true},
+{"id": "r10", "yr": "اضافي", "yrc": "#4ade80", "q": "ما معنى ^ في بداية الـ pattern؟", "code": "/^\\d+/", "opts": ["اي رقم في النص", "النص لازم يبدا برقم", "النص لازم ينتهي برقم", "اي شيء غير رقم"], "ans": 1, "exp": "^ = بداية النص", "isnew": true},
+{"id": "r11", "yr": "اضافي", "yrc": "#4ade80", "q": "ما معنى [^0-9] في RegEx؟", "code": null, "opts": ["اي رقم", "اي شيء غير رقم", "بداية رقم", "نهاية رقم"], "ans": 1, "exp": "^ داخل [] = ليس", "isnew": true},
+{"id": "r12", "yr": "اضافي", "yrc": "#4ade80", "q": "ما ناتج replace بدون g؟", "code": "var result = '12-34-56'.replace(/-/, ':');\ndocument.write(result);", "opts": ["12:34:56", "12:34-56", "12-34:56", "error"], "ans": 1, "exp": "بدون g يستبدل اول تطابق فقط", "isnew": true},
+{"id": "r13", "yr": "اضافي", "yrc": "#4ade80", "q": "ما ناتج replace مع g؟", "code": "var result = '12-34-56'.replace(/-/g, ':');\ndocument.write(result);", "opts": ["12:34:56", "12:34-56", "12-34:56", "error"], "ans": 0, "exp": "مع g يستبدل كل التطابقات", "isnew": true},
+{"id": "r14", "yr": "اضافي", "yrc": "#4ade80", "q": "ما الصحيح في pattern للتحقق من رقمين بفاصلة؟", "code": "// مثال صحيح: 10,7 او -5,20", "opts": ["/d,d/", "d+,d+", "/^[+-]?d+,[+-]?d+$/", "d{2},d{2}"], "ans": 2, "exp": "^..$ من البداية للنهاية. [+-]? علامة اختيارية", "isnew": true},
+{"id": "r15", "yr": "فاينل قديم", "yrc": "#4ade80", "q": "ما الصحيح عن هذا الـ pattern؟", "code": "/[a-z0-9]+@[a-z0-9]+.dz/", "opts": ["يجب ان ينتهي بـ .dz", "يحتوي فقط على نقطة واحدة", "لا يمكن ان يحتوي على احرف كبيرة", "كل ما سبق صحيح"], "ans": 3, "exp": "كل ما سبق صحيح", "isnew": false}]},
+  ls:{cl:"ls",secs:[
+    {t:"setItem و getItem",ids:["l1","l2","l3"]},
+    {t:"removeItem و clear",ids:["l4","l9","l10"]},
+    {t:"JSON.stringify و JSON.parse",ids:["l5","l6","l7","l8"]}
+  ],qs:[{"id": "l1", "yr": "1446", "yrc": "#38bdf8", "q": "ما الميثود الصحيحة لحفظ بيانات؟", "code": null, "opts": ["localStorage.save", "localStorage.setItem", "localStorage.store", "localStorage.add"], "ans": 1, "exp": "setItem(key, value)", "isnew": false},
+{"id": "l2", "yr": "1446", "yrc": "#38bdf8", "q": "ما الميثود الصحيحة لجلب بيانات؟", "code": null, "opts": ["localStorage.load", "localStorage.getItem", "localStorage.retrieve", "localStorage.fetch"], "ans": 1, "exp": "getItem(key)", "isnew": false},
+{"id": "l3", "yr": "1446", "yrc": "#38bdf8", "q": "ما ناتج الكود؟", "code": "localStorage.setItem('name','ريما');\nvar x = localStorage.getItem('name');\ndocument.write(x);", "opts": ["null", "undefined", "ريما", "error"], "ans": 2, "exp": "setItem حفظت. getItem جلبت. الناتج: ريما", "isnew": false},
+{"id": "l4", "yr": "1446", "yrc": "#38bdf8", "q": "ما ناتج getItem بعد removeItem؟", "code": "localStorage.setItem('name','ريما');\nlocalStorage.removeItem('name');\nvar x = localStorage.getItem('name');\ndocument.write(x);", "opts": ["ريما", "undefined", "error", "null"], "ans": 3, "exp": "بعد removeItem القيمة = null", "isnew": false},
+{"id": "l5", "yr": "1446", "yrc": "#38bdf8", "q": "لماذا نستخدم JSON.stringify؟", "code": null, "opts": ["لتسريع الحفظ", "localStorage يحفظ strings فقط", "لتشفير البيانات", "لضغط البيانات"], "ans": 1, "exp": "localStorage يقبل strings فقط", "isnew": false},
+{"id": "l6", "yr": "1446", "yrc": "#38bdf8", "q": "ما ناتج typeof بعد getItem؟", "code": "var user = {name:'Sarah',age:20};\nlocalStorage.setItem('user',JSON.stringify(user));\nvar result = localStorage.getItem('user');\ndocument.write(typeof result);", "opts": ["object", "array", "string", "undefined"], "ans": 2, "exp": "getItem يرجع string دائما", "isnew": false},
+{"id": "l7", "yr": "1446", "yrc": "#38bdf8", "q": "كيف تجلب object محفوظ؟", "code": null, "opts": ["localStorage.getItem('user')", "JSON.parse(localStorage.getItem('user'))", "JSON.stringify(localStorage.getItem('user'))", "localStorage.getObject('user')"], "ans": 1, "exp": "JSON.parse يحول string لـ object", "isnew": false},
+{"id": "l8", "yr": "1446", "yrc": "#38bdf8", "q": "ما ناتج u.age؟", "code": "var user = {name:'John',age:30};\nlocalStorage.setItem('user',JSON.stringify(user));\nvar r = JSON.parse(localStorage.getItem('user'));\nr.age = 31;\nlocalStorage.setItem('user',JSON.stringify(r));\nvar u = JSON.parse(localStorage.getItem('user'));\ndocument.write(u.age);", "opts": ["30", "31", "undefined", "error"], "ans": 1, "exp": "r.age=31 حفظناه. u.age = 31", "isnew": false},
+{"id": "l9", "yr": "اضافي", "yrc": "#38bdf8", "q": "الفرق بين clear و removeItem؟", "code": null, "opts": ["لا فرق", "clear يمسح كل شيء | removeItem يمسح واحدة", "removeItem يمسح كل شيء | clear يمسح واحدة", "كلاهما يمسحان واحدة"], "ans": 1, "exp": "clear() = كل شيء. removeItem(key) = key واحد", "isnew": true},
+{"id": "l10", "yr": "اضافي", "yrc": "#38bdf8", "q": "صح ام خطا: البيانات تختفي عند اغلاق المتصفح", "code": null, "opts": ["صح", "خطا"], "ans": 1, "exp": "خطا - localStorage تبقى حتى بعد اغلاق المتصفح", "isnew": true}]},
+  cs:{cl:"cs",secs:[
+    {t:"Box Model و Overflow",ids:["c5","c6"]},
+    {t:"Position و Flexbox",ids:["c1","c2"]},
+    {t:"CSS Selectors",ids:["c3","c4","c7"]}
+  ],qs:[{"id": "c1", "yr": "فاينل قديم", "yrc": "#a78bfa", "q": "صح ام خطا: RWD is based on fixed layouts", "code": null, "opts": ["صح", "خطا"], "ans": 1, "exp": "خطا - RWD مبني على fluid layouts مرنة", "isnew": false},
+{"id": "c2", "yr": "فاينل قديم", "yrc": "#a78bfa", "q": "متى يطبق هذا الـ CSS؟", "code": "@media screen and (min-width:50em){\n  body { font-family: cursive }\n}", "opts": ["الـ viewport اقل من 50em", "الـ viewport على الاقل 50em", "الـ viewport بالضبط 50em", "العرض لا يهم"], "ans": 1, "exp": "min-width:50em = 50em او اكثر", "isnew": false},
+{"id": "c3", "yr": "فاينل قديم", "yrc": "#a78bfa", "q": "ايهم يطبق style على كل عناصر class=flower؟", "code": null, "opts": [".flower { }", "flower { }", "#flower { }", "*flower { }"], "ans": 0, "exp": ".flower = كل عناصر class=flower", "isnew": false},
+{"id": "c4", "yr": "فاينل قديم", "yrc": "#a78bfa", "q": "ما لون p.cite؟", "code": "<style>\nblockquote p { color: orange; }\np.cite { color: lime; }\n</style>\n<blockquote><p class='cite'>text</p></blockquote>", "opts": ["orange", "lime", "black", "لا لون"], "ans": 1, "exp": "p.cite اكثر تحديدا = lime", "isnew": false},
+{"id": "c5", "yr": "فاينل قديم", "yrc": "#a78bfa", "q": "ما العرض الكلي؟", "code": "div {\n  width: 320px;\n  padding: 10px;\n  border: 5px solid gray;\n  margin: 0;\n}", "opts": ["320px", "340px", "350px", "360px"], "ans": 2, "exp": "320 + 10+10 + 5+5 = 350px", "isnew": false},
+{"id": "c6", "yr": "فاينل قديم", "yrc": "#a78bfa", "q": "ما الـ pseudo-element لاول سطر؟", "code": null, "opts": ["::first", "::first-line", "::first-letter", "::line"], "ans": 1, "exp": "::first-line يطبق style على اول سطر", "isnew": false},
+{"id": "c7", "yr": "فاينل قديم", "yrc": "#a78bfa", "q": "Give an example of user action pseudo-class", "code": null, "opts": ["::first-line", "::before", ":hover", ":nth-child"], "ans": 2, "exp": ":hover pseudo-class عند مرور الماوس", "isnew": false},
+{"id": "c8", "yr": "فاينل قديم", "yrc": "#a78bfa", "q": "Which value is NOT false in JavaScript?", "code": null, "opts": ["0", "0.0", "\"false\"", "1"], "ans": 3, "exp": "1 هي الوحيدة اللي مو false في JS", "isnew": false},
+{"id": "c9", "yr": "فاينل قديم", "yrc": "#a78bfa", "q": "صح ام خطا: CSS background-clip property indicates where the background painting area ends", "code": null, "opts": ["صح", "خطا"], "ans": 0, "exp": "صح - background-clip يحدد اين تنتهي منطقة رسم الخلفية", "isnew": false},
+{"id": "c10", "yr": "فاينل قديم", "yrc": "#a78bfa", "q": "What is the total width of this div?", "code": "div {\n  width: 320px;\n  padding: 10px;\n  border: 5px solid gray;\n  margin: 0;\n}", "opts": ["320px", "340px", "350px", "360px"], "ans": 2, "exp": "320 + 10+10 (padding) + 5+5 (border) = 350px", "isnew": false},
+{"id": "c11", "yr": "فاينل قديم", "yrc": "#a78bfa", "q": "Shorten background properties in one declaration:\nbackground-position: right top;\nbackground-color: #ffffff;\nbackground-image: url(img_tree.png);\nbackground-repeat: no-repeat;", "code": null, "opts": ["background: url(img_tree.png) #ffffff no-repeat right top", "background: #ffffff url(img_tree.png) right top no-repeat", "background: #ffffff url(img_tree.png) no-repeat right top", "background: url(img_tree.png) no-repeat right top #ffffff"], "ans": 0, "exp": "الترتيب الصحيح: color url repeat position", "isnew": false}]},
+  rw:{cl:"rw",secs:[
+    {t:"RWD من الفاينلات",ids:["rwd1","rwd2","rwd3","rwd4"]}
+  ],qs:[{"id": "rwd1", "yr": "فاينل قديم", "yrc": "#38bdf8", "q": "صح ام خطا: RWD states content should be different across devices", "code": null, "opts": ["صح", "خطا"], "ans": 1, "exp": "خطا - RWD يقول نفس المحتوى لكل الاجهزة", "isnew": false},
+{"id": "rwd2", "yr": "فاينل قديم", "yrc": "#38bdf8", "q": "صح ام خطا: max-width:100% ensures images will not be cropped", "code": null, "opts": ["صح", "خطا"], "ans": 0, "exp": "صح - max-width:100% يجعل الصورة تتقلص بدون قطع", "isnew": false},
+{"id": "rwd3", "yr": "فاينل قديم", "yrc": "#38bdf8", "q": "اي CSS تستخدم الاجهزة الصغيرة؟", "code": "<link rel=\"stylesheet\" href=\"style1.css\">\n<link rel=\"stylesheet\" href=\"styles2.css\" media=\"screen and (min-width:1024px)\">", "opts": ["style1.css", "styles2.css", "كلاهما", "لا شيء"], "ans": 0, "exp": "style1.css بدون شرط تطبق دائما", "isnew": false},
+{"id": "rwd4", "yr": "فاينل قديم", "yrc": "#38bdf8", "q": "صح ام خطا: img max-width:100% ensures images will not be cropped on small screens", "code": null, "opts": ["صح", "خطا"], "ans": 0, "exp": "صح - max-width:100% يجعل الصورة تتقلص مع حجم الشاشة", "isnew": false}]},
+  tf:{cl:"tf",secs:[
+    {t:"Tables - بنية الجدول",ids:["tf1","tf9","tf10","tf11"]},
+    {t:"Forms - اساسيات",ids:["tf3","tf4","tf6","tf7"]},
+    {t:"Input Types و Accessibility",ids:["tf2","tf5","tf8","tf12"]}
+  ],qs:[{"id": "tf1", "yr": "فاينل قديم", "yrc": "#f59e0b", "q": "In HTML tables, the number of columns is determined by how many td elements are in each row", "code": null, "opts": ["صح", "خطا"], "ans": 0, "exp": "صح - عدد الاعمدة يحدد بعدد td في كل صف", "isnew": false},
+{"id": "tf2", "yr": "فاينل قديم", "yrc": "#f59e0b", "q": "Which attribute is NOT used for radio button?", "code": null, "opts": ["name", "value", "checked", "selected"], "ans": 3, "exp": "selected مو attribute للـ radio. الصحيح: name, value, checked", "isnew": false},
+{"id": "tf3", "yr": "فاينل قديم", "yrc": "#f59e0b", "q": "input type=file — what method is required?", "code": null, "opts": ["GET", "POST", "PUT", "DELETE"], "ans": 1, "exp": "POST للملفات + enctype=multipart/form-data", "isnew": false},
+{"id": "tf4", "yr": "فاينل قديم", "yrc": "#f59e0b", "q": "input has size=20 maxlength=16 — how many characters can user type?", "code": "<input type='text' size='20' maxlength='16'>", "opts": ["20", "16", "36", "unlimited"], "ans": 1, "exp": "maxlength هو الحد الفعلي. المستخدم يكتب 16 حرف بس", "isnew": false},
+{"id": "tf5", "yr": "فاينل قديم", "yrc": "#f59e0b", "q": "label داخل input بدون for — نوع الربط؟", "code": "<label> red <input type='text' name='Color'> </label>", "opts": ["explicitly", "implicitly", "no association", "error"], "ans": 1, "exp": "implicitly = input داخل label مباشرة", "isnew": false},
+{"id": "tf6", "yr": "فاينل قديم", "yrc": "#f59e0b", "q": "ما الفرق بين action و method في form؟", "code": null, "opts": ["كلاهما يحددان وين ترسل", "action = وين ترسل | method = كيف ترسل (GET/POST)", "method = وين ترسل | action = كيف ترسل", "لا فرق"], "ans": 1, "exp": "action = URL السيرفر. method = GET او POST", "isnew": false},
+{"id": "tf7", "yr": "فاينل قديم", "yrc": "#f59e0b", "q": "ما الـ input type اللي يُخصَّص بـ JS لأي action؟", "code": null, "opts": ["submit", "reset", "text", "button"], "ans": 3, "exp": "input type=button يُخصَّص بـ JS لأي action", "isnew": false},
+{"id": "tf8", "yr": "فاينل قديم", "yrc": "#f59e0b", "q": "ما الفرق بين radio و checkbox؟", "code": null, "opts": ["كلاهما يسمح باختيار واحد فقط", "radio = واحد فقط | checkbox = واحد او اكثر", "checkbox = واحد فقط | radio = واحد او اكثر", "لا فرق"], "ans": 1, "exp": "radio = واحد فقط من المجموعة. checkbox = أكثر من اختيار", "isnew": false},
+{"id": "tf9", "yr": "فاينل قديم", "yrc": "#f59e0b", "q": "ما الـ colspan؟", "code": "<th colspan='2'>Fat</th>", "opts": ["تمديد رأسي على صفوف", "تمديد أفقي على أعمدة", "تمديد على الاثنين", "لا شيء"], "ans": 1, "exp": "colspan تمدد الخلية أفقياً على عدد الاعمدة المحدد", "isnew": false},
+{"id": "tf10", "yr": "فاينل قديم", "yrc": "#f59e0b", "q": "ما الـ rowspan؟", "code": "<th rowspan='3'>Size</th>", "opts": ["تمديد أفقي على أعمدة", "تمديد رأسي على صفوف", "تمديد على الاثنين", "لا شيء"], "ans": 1, "exp": "rowspan تمدد الخلية رأسياً على عدد الصفوف المحدد", "isnew": false},
+{"id": "tf11", "yr": "فاينل قديم", "yrc": "#f59e0b", "q": "أين يجب أن يكون caption في الجدول؟", "code": null, "opts": ["بعد كل صفوف البيانات", "أول شيء داخل table", "داخل thead", "داخل tbody"], "ans": 1, "exp": "caption يجب أن يكون أول عنصر داخل table", "isnew": false},
+{"id": "tf12", "yr": "فاينل قديم", "yrc": "#f59e0b", "q": "fieldset تُستخدم مع ماذا؟", "code": null, "opts": ["caption", "label", "legend", "th"], "ans": 2, "exp": "fieldset تُستخدم مع legend لتجميع حقول مرتبطة", "isnew": false}]}
+};
+
+var cur=null,ans=0,cor=0,wr=0,tot=0;
+var L=["A","B","C","D"];
+function mk(t,c){var e=document.createElement(t);if(c)e.className=c;return e;}
+function go(ch){
+  cur=ch; ans=cor=wr=0;
+  var d=D[ch]; tot=d.qs.length;
+  document.getElementById("sq").textContent=tot;
+  document.getElementById("sa").textContent=0;
+  document.getElementById("sc").textContent=0;
+  document.getElementById("sw").textContent=0;
+  document.getElementById("pt").textContent="0/"+tot;
+  var pf=document.getElementById("pf");
+  pf.style.width="0%"; pf.className="fill "+d.cl;
+  var lbl=document.getElementById("qlbl");
+  lbl.textContent=d.cl.toUpperCase();
+  lbl.className="lbl "+d.cl;
+  document.getElementById("banner").style.display="none";
+  document.getElementById("home").style.display="none";
+  document.getElementById("quiz").style.display="block";
+  build(d); window.scrollTo(0,0);
+}
+function build(d){
+  var root=document.getElementById("root"); root.textContent="";
+  d.secs.forEach(function(sec){
+    var st=mk("div","sec"); st.textContent=sec.t; root.appendChild(st);
+    sec.ids.forEach(function(id){
+      var q=null;
+      for(var i=0;i<d.qs.length;i++){if(d.qs[i].id===id){q=d.qs[i];break;}}
+      if(!q)return;
+      var card=mk("div","card"); card.id="c-"+id;
+      var badge=mk("div","badge");
+      badge.style.background=q.isnew?"#0d2318":"#1e1428";
+      badge.style.color=q.yrc;
+      badge.textContent=q.yr;
+      card.appendChild(badge);
+      var qt=mk("div","qt"); qt.textContent=q.q; card.appendChild(qt);
+      if(q.code){var pre=mk("pre");pre.textContent=q.code;card.appendChild(pre);}
+      var od=mk("div","opts"); od.id="o-"+id;
+      q.opts.forEach(function(o,i){
+        var opt=mk("div","opt");
+        opt.setAttribute("data-q",id); opt.setAttribute("data-i",i);
+        var lt=mk("div","lt"); lt.textContent=L[i];
+        var sp=mk("span"); sp.textContent=o;
+        opt.appendChild(lt); opt.appendChild(sp);
+        function handler(){doAns(this.getAttribute("data-q"),parseInt(this.getAttribute("data-i")));}
+        opt.addEventListener("click",handler,false);
+        opt.addEventListener("touchend",function(e){e.preventDefault();handler.call(this);},false);
+        od.appendChild(opt);
+      });
+      card.appendChild(od);
+      var exp=mk("div","exp"); exp.id="e-"+id; card.appendChild(exp);
+      root.appendChild(card);
+    });
+  });
+}
+function doAns(qid,idx){
+  var card=document.getElementById("c-"+qid);
+  if(card.getAttribute("data-done"))return;
+  card.setAttribute("data-done","1");
+  var d=D[cur]; var q=null;
+  for(var i=0;i<d.qs.length;i++){if(d.qs[i].id===qid){q=d.qs[i];break;}}
+  var ok=idx===q.ans;
+  var ao=document.getElementById("o-"+qid).children;
+  for(var i=0;i<ao.length;i++){
+    ao[i].style.pointerEvents="none";
+    if(i===q.ans) ao[i].className="opt show";
+    else if(i===idx&&!ok) ao[i].className="opt bad";
+    else ao[i].className="opt dim";
+  }
+  var exp=document.getElementById("e-"+qid); exp.style.display="block";
+  if(ok){
+    card.className="card ok"; exp.className="exp ok";
+    exp.textContent="صح! "+q.exp;
+    cor++; document.getElementById("sc").textContent=cor;
+  } else {
+    card.className="card bad"; exp.className="exp bad";
+    exp.textContent="غلط. الجواب: "+L[q.ans]+" - "+q.exp;
+    wr++; document.getElementById("sw").textContent=wr;
+  }
+  ans++;
+  document.getElementById("sa").textContent=ans;
+  document.getElementById("pt").textContent=ans+"/"+tot;
+  document.getElementById("pf").style.width=(ans/tot*100)+"%";
+  if(ans===tot) result();
+}
+function result(){
+  var p=Math.round(cor/tot*100);
+  document.getElementById("bsc").textContent=cor+" / "+tot;
+  document.getElementById("bmsg").textContent=p>=90?"ممتاز! جاهز للفاينل":p>=70?"كويس - راجع الغلطات":p>=50?"ركز على الاسئلة الحمراء":"كرر وحاول مجددا";
+  document.getElementById("banner").style.display="block";
+}
+function goHome(){
+  document.getElementById("quiz").style.display="none";
+  document.getElementById("home").style.display="flex";
+  document.getElementById("banner").style.display="none";
+  window.scrollTo(0,0);
+}
+function retry(){
+  ans=cor=wr=0;
+  document.getElementById("sa").textContent=0;
+  document.getElementById("sc").textContent=0;
+  document.getElementById("sw").textContent=0;
+  document.getElementById("pt").textContent="0/"+tot;
+  document.getElementById("pf").style.width="0%";
+  document.getElementById("banner").style.display="none";
+  build(D[cur]); window.scrollTo(0,0);
+}
+</script>
+</body>
+</html>
